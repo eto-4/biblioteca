@@ -1,7 +1,11 @@
 <?php
 require_once 'Material.php';
 require_once '../interfaces/Reservable.php';
+require_once '../traits/Auditoria.php';
 class Llibre extends Material implements Reservable {
+    
+    // Usar Auditoria
+    use Auditoria;
 
     // Propietats estatiques
     static protected int $PAGINES_MIN = 1;
@@ -29,6 +33,12 @@ class Llibre extends Material implements Reservable {
       );
 
       $this->setNumeroPagines($numPag);
+
+      // Registrar estat inicial
+      $this->registrarAccio(
+        'creat',
+        "ID: {$id}, Títol: {$titol}, Autor: {$autor}, Any: {$any_publicacio}, Disponible: " . ($disponible ? "Sí" : "No") . ", Pàgines: {$numPag}"
+      );
     }
 
     // Metodes Abstractes Implementats
@@ -36,7 +46,8 @@ class Llibre extends Material implements Reservable {
 
     /**
      * Calcular Multa - Implementació del Metode Abstracte
-     *  Retorna 0.50€ per dia de retard
+     * Retorna 0.50€ per dia de retard
+     * @param int $diesRetard Quantitat de dies de retard després de la data limit.
      * */
     public function calcularMulta(int $diesRetard): float { return 0.50 * $diesRetard; }
 
@@ -59,11 +70,13 @@ class Llibre extends Material implements Reservable {
 
     /**
      * Inserta pàgines al llibre
+     * @param int $pagines Número de pàgines que s'introduïrán al Llibre.
      * */
     public function setNumeroPagines(int $pagines): void {
 
         if ( $pagines < Llibre::$PAGINES_MIN ) { throw new \InvalidArgumentException("Número de pàgines massa baix."); }
         $this->numPag = $pagines;
+        $this->registrarAccio("PàginesCount", "TotalPàgines: {$pagines}pag.");
     }
 
     /**
@@ -89,6 +102,7 @@ class Llibre extends Material implements Reservable {
     public function reservar(string $nomUsuari): bool {
         if ($this->usuariReserva !== null) return false;
         $this->usuariReserva = $nomUsuari;
+        $this->registrarAccio('reservat', "Usuari: $nomUsuari");
         return true;
     }
 
@@ -101,6 +115,7 @@ class Llibre extends Material implements Reservable {
      */
     public function cancelarReserva(): bool {
         if ($this->usuariReserva === null) return false;
+        $this->registrarAccio('reserva_cancel·lada', "Usuari: $this->usuariReserva");
         $this->usuariReserva = null;
         return true;
     }

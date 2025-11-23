@@ -1,6 +1,10 @@
 <?php
 require_once 'Material.php'; 
+require_once '../traits/Auditoria.php';
 class Revista extends Material {
+ 
+    // Usar Auditoria
+    use Auditoria;
 
     // Propietats estatiques
     static protected int $NUM_MIN = 1;
@@ -28,6 +32,12 @@ class Revista extends Material {
       );
 
       $this->setNumeroEdicio($numEdicio);
+
+      // Registrar estat inicial
+      $this->registrarAccio(
+        'creat',
+        "ID: {$id}, Títol: {$titol}, Autor: {$autor}, Any: {$any_publicacio}, Disponible: " . ($disponible ? "Sí" : "No") . ", Num.Edició: {$numEdicio}"
+      );
     }
 
     
@@ -36,7 +46,8 @@ class Revista extends Material {
 
     /**
      * Calcular Multa - Implementació del Metode Abstracte
-     *  Retorna 0.25€ per dia de retard
+     * Retorna 0.25€ per dia de retard
+     * @param int $diesRetard Quantitat de dies de retard després de la data limit.
      * */
     public function calcularMulta(int $diesRetard): float { return 0.25 * $diesRetard; }
     
@@ -59,11 +70,13 @@ class Revista extends Material {
 
     /**
      * Inserta el número d'edició a la revista.
+     * @param int $numero Número d'edició que s'introduïrán a la revista.
      * */
     public function setNumeroEdicio(int $numero): void {
 
         if ( $numero < Revista::$NUM_MIN ) { throw new \InvalidArgumentException("Número d'edició massa baix."); }
         $this->numEdicio = $numero;
+        $this->registrarAccio("NovaEdició", "Edició: $numero");
     }
 
     /**

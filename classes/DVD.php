@@ -1,7 +1,11 @@
 <?php 
 require_once 'Material.php';
 require_once '../interfaces/Reservable.php';
+require_once '../traits/Auditoria.php';
 class DVD extends Material {
+    
+    // Usar Auditoria
+    use Auditoria;
 
     // Propietats estatiques
     static protected int $TEMPS_MIN = 1;
@@ -30,6 +34,12 @@ class DVD extends Material {
       );
 
       $this->setDuracio($duracio);
+
+      // Registrar estat inicial
+      $this->registrarAccio(
+        'creat',
+        "ID: {$id}, Títol: {$titol}, Autor: {$autor}, Any: {$any_publicacio}, Disponible: " . ($disponible ? "Sí" : "No") . ", Duració: {$duracio}"
+      );
     }
 
     // Metodes Abstractes Implementats
@@ -37,7 +47,9 @@ class DVD extends Material {
 
     /**
      * Calcular Multa - Implementació del Metode Abstracte
-     *  Retorna 1.00€ per dia de retard
+     * Retorna 1.00€ per dia de retard
+     * @param int $diesRetard Quantitat de dies de retard després de la data limit.
+     * 
      * */
     public function calcularMulta(int $diesRetard): float { return 1.00 * $diesRetard; }
     
@@ -60,11 +72,13 @@ class DVD extends Material {
 
     /**
      * Inserta el número de minuts del DVD.
+     * @param int $minuts quantita de minuts que es registraràn sobre el DVD.
      * */
     public function setDuracio(int $minuts): void {
 
         if ( $minuts < DVD::$TEMPS_MIN ) { throw new \InvalidArgumentException("La durada del DVD massa baix."); }
         $this->duracio = $minuts;
+        $this->registrarAccio("NovaDurada", "Durada: {$minuts}min");
     }
 
     /**
@@ -101,6 +115,7 @@ class DVD extends Material {
     public function reservar(string $nomUsuari): bool {
         if ($this->usuariReserva !== null) return false;
         $this->usuariReserva = $nomUsuari;
+        $this->registrarAccio('reservat', "Usuari: $nomUsuari");
         return true;
     }
 
@@ -113,6 +128,7 @@ class DVD extends Material {
      */
     public function cancelarReserva(): bool {
         if ($this->usuariReserva === null) return false;
+        $this->registrarAccio('reserva_cancel·lada', "Usuari: $this->usuariReserva");
         $this->usuariReserva = null;
         return true;
     }
