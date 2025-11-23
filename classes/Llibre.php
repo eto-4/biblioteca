@@ -27,20 +27,20 @@ class Llibre extends Material {
           $disponible
         );
 
-        $this->numPag = $numPag;
+        $this->setNumeroPagines($numPag);
     }
 
     // Metodes Abstractes Implementats
     // ---------------------------------------------------------
 
     /**
-     * Calcular Multa - Metode Abstracte Implementat
+     * Calcular Multa - Implementació del Metode Abstracte
      *  Retorna 0.50€ per dia de retard
      * */
     public function calcularMulta(int $diesRetard): float { return 0.50 * $diesRetard; }
 
     /**
-     * Get Tipus - Metode Abstracte Implementat
+     * Get Tipus - Implementació del Metode Abstracte
      * Retorna el tipus de material ("Llibre", "Revista", "DVD")
     */
     public function getTipus(): string { return 'Llibre'; }
