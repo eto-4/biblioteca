@@ -1,6 +1,4 @@
 <?php
-require_once 'Material.php'; 
-require_once '../traits/Auditoria.php';
 class Revista extends Material {
  
     // Usar Auditoria

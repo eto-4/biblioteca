@@ -1,10 +1,4 @@
 <?php 
-require_once 'Material.php';
-require_once 'Llibre.php';
-require_once 'Revista.php';
-require_once 'DVD.php';
-require_once '../interfaces/Reservable.php';
-
 /**
  * Classe Biblioteca
  *
@@ -88,7 +82,7 @@ class Biblioteca {
      * @return array Materials disponibles
      */
     public function llistarDisponibles(): array {
-        return array_filter($this->materials, fn($m) => $m->estaDisponible());
+        return array_filter($this->materials, fn($m) => $m->isDisponible());
     }
 
     /**
@@ -97,7 +91,7 @@ class Biblioteca {
      * @return array Materials prestats
      */
     public function llistarPrestat(): array {
-        return array_filter($this->materials, fn($m) => !$m->estaDisponible());
+        return array_filter($this->materials, fn($m) => !$m->isDisponible());
     }
 
     /**

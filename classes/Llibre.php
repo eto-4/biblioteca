@@ -1,7 +1,4 @@
 <?php
-require_once 'Material.php';
-require_once '../interfaces/Reservable.php';
-require_once '../traits/Auditoria.php';
 class Llibre extends Material implements Reservable {
     
     // Usar Auditoria

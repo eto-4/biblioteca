@@ -1,11 +1,4 @@
 <?php
-require_once 'Material.php';
-require_once 'Usuari.php';
-require_once '../traits/Auditoria.php';
-require_once '../exceptions/MaterialNoDisponibleException.php';
-require_once '../exceptions/UsuariNoTrobatException.php';
-require_once '../exceptions/MaterialJaPrestatException.php';
-
 /**
  * Classe Prestec
  *
