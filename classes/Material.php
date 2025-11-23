@@ -29,6 +29,9 @@ abstract class Material {
 
     }
 
+    // Metodes Abstractes
+    // ---------------------------------------------------------
+
     /**
      * Calcular Multa - Metode Abstracte
      * Calcula la multa segons els dies de retard
@@ -42,6 +45,7 @@ abstract class Material {
     abstract public function getTipus(): string;
 
     // Metodes - Funcionalitats
+    // ---------------------------------------------------------
 
     /**
      * prestar(): bool
