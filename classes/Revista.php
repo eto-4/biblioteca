@@ -5,7 +5,7 @@ class Revista extends Material {
     // Propietats estatiques
     static protected int $NUM_MIN = 1;
 
-    // Propietats privades
+    // Propietats protegida
     protected int $numEdicio;
 
     // Constructor
@@ -19,15 +19,15 @@ class Revista extends Material {
     )
     // Cos del Constructor
     {
-        parent::__construct(
-          $id,
-          $titol,
-          $autor,
-          $any_publicacio,
-          $disponible
-        );
+      parent::__construct(
+        $id,
+        $titol,
+        $autor,
+        $any_publicacio,
+        $disponible
+      );
 
-        $this->setNumeroEdicio($numEdicio);
+      $this->setNumeroEdicio($numEdicio);
     }
 
     

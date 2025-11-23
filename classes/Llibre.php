@@ -1,12 +1,13 @@
 <?php
 require_once 'Material.php';
-class Llibre extends Material {
+require_once '../interfaces/Reservable.php';
+class Llibre extends Material implements Reservable {
 
     // Propietats estatiques
     static protected int $PAGINES_MIN = 1;
-
-    // Propietats privades
+    // Propietats protegida
     protected int $numPag;
+    protected ?string $usuariReserva = null;
 
     // Constructor
     public function __construct(
@@ -19,15 +20,15 @@ class Llibre extends Material {
     )
     // Cos del Constructor
     {
-        parent::__construct(
-          $id,
-          $titol,
-          $autor,
-          $any_publicacio,
-          $disponible
-        );
+      parent::__construct(
+        $id,
+        $titol,
+        $autor,
+        $any_publicacio,
+        $disponible
+      );
 
-        $this->setNumeroPagines($numPag);
+      $this->setNumeroPagines($numPag);
     }
 
     // Metodes Abstractes Implementats
@@ -72,6 +73,54 @@ class Llibre extends Material {
     public function __toString(): string {
         $info = parent::__toString() . "Págines: {$this->numPag}" . PHP_EOL;
         return (PHP_SAPI === 'cli') ? $info : nl2br($info);
+    }
+
+    // Implementacions Interfaces > Reservable
+
+    /**
+     * Reserva el material per a un usuari.
+     *
+     * Intenta reservar el material per l'usuari indicat.
+     * Retorna false si ja està reservat.
+     *
+     * @param string $nomUsuari Nom de l'usuari que vol reservar el material.
+     * @return bool True si la reserva s'ha realitzat correctament, false si ja estava reservat.
+     */
+    public function reservar(string $nomUsuari): bool {
+        if ($this->usuariReserva !== null) return false;
+        $this->usuariReserva = $nomUsuari;
+        return true;
+    }
+
+    /**
+     * Cancel·la la reserva actual del material.
+     *
+     * Retorna false si no hi havia cap reserva activa.
+     *
+     * @return bool True si la reserva s'ha cancel·lat correctament, false si no hi havia reserva.
+     */
+    public function cancelarReserva(): bool {
+        if ($this->usuariReserva === null) return false;
+        $this->usuariReserva = null;
+        return true;
+    }
+
+    /**
+     * Comprova si el material està actualment reservat.
+     *
+     * @return bool True si hi ha una reserva activa, false si no.
+     */
+    public function estaReservat(): bool {
+        return $this->usuariReserva !== null;
+    }
+
+    /**
+     * Obté el nom de l'usuari que ha reservat el material.
+     *
+     * @return string|null Nom de l'usuari que ha fet la reserva, o null si no hi ha reserva.
+     */
+    public function getUsuariReserva(): ?string {
+        return $this->usuariReserva;
     }
 }
 ?>
