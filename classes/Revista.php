@@ -68,7 +68,7 @@ class Revista extends Material {
 
     /**
      * __toString(): string
-     * Retorna informació formatada del Llibre
+     * Retorna informació formatada de la Revista.
      * */
     public function __toString(): string {
         $info = parent::__toString() . "Edició: {$this->numEdicio}" . PHP_EOL;
