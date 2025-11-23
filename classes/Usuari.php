@@ -14,7 +14,8 @@ class Usuari {
     private string $email;
     private array $materialsPrestat = [];
     private DateTime $dataRegistre;
-
+    private array $dynamics = [];
+    
     /**
      * Constructor de l'usuari
      *
@@ -47,7 +48,7 @@ class Usuari {
      * @return mixed Valor de la propietat
      */
     public function __get(string $propietat): mixed {
-        return $this->$propietat ?? null;
+        return $this->dynamics[$propietat] ?? $this->$propietat ?? null;
     }
 
     /**
@@ -64,9 +65,9 @@ class Usuari {
             }
             $oldEmail = $this->email;
             $this->email = $valor;
-
-            // Registrar canvi de email
             $this->registrarAccio("email_modificat", "De: $oldEmail, A: $valor");
+        } else {
+            $this->dynamics[$propietat] = $valor;
         }
     }
 
